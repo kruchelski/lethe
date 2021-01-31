@@ -7,15 +7,10 @@ import ColorPalette from '../../global/ColorPalette';
 
 const SplashScreen = ({ navigator, setLoading }) => {
 	const [greeting, setGreeting] = useState('');
-	const [mood, setMood] = useState('');
 	const [text, setText] = useState('');
 
 	if (!greeting) {
 		setGreeting(lethaiApi.getGreeting());
-	}
-
-	if (!mood) {
-		setMood(lethaiApi.getMood());
 	}
 
 	useEffect(() => {
