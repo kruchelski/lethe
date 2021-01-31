@@ -6,20 +6,13 @@ const styles = StyleSheet.create({
 		flex: 1,
 		backgroundColor: ColorPalette.bg01,
 		alignItems: 'center',
-		justifyContent: 'space-between',
+		justifyContent: 'center',
 		padding: 10,
-		paddingVertical: 50
-	},
-	logoImage: {
-		width: 300,
-		height: 150,
-		resizeMode: 'contain',
 	},
 	text: {
 		fontFamily: 'VT323_400Regular',
 		color: ColorPalette.fg01,
-		fontSize: 24,
-		textAlign: 'center'
+		fontSize: 24
 	}
 });
 

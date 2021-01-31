@@ -1,18 +1,45 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Image, Text, View, ActivityIndicator } from 'react-native';
+import { lethaiApi } from '../../services';
 import styles from './style';
+import { Logo } from '../../assets';
+import ColorPalette from '../../global/ColorPalette';
 
 const SplashScreen = ({ navigator, setLoading }) => {
-	const opa = 'Hey motherfucker, what you want?';
+	const [greeting, setGreeting] = useState('');
+	const [mood, setMood] = useState('');
 	const [text, setText] = useState('');
+
+	if (!greeting) {
+		setGreeting(lethaiApi.getGreeting());
+	}
+
+	if (!mood) {
+		setMood(lethaiApi.getMood());
+	}
 
 	useEffect(() => {
 		setTimeout(() => {
-			let temp = opa.substring(0, text.length - 1);
+			let temp = greeting.substring(0, text.length - 1);
 			setText(`${temp}🁢`);
 		}, 50)
+
+		if (text.length === greeting.length) {
+			setTimeout(() => {
+				setLoading(false);
+			}, 2500)
+		}
 	}, [text])
-	return null
+
+	return (
+		<View style={ styles.container }>
+			<Image source={ Logo } style={ styles.logoImage } />
+			<ActivityIndicator size="large" color={ ColorPalette.fg02 } />
+			<Text style={ styles.text }>
+				{ text }
+			</Text>
+		</View>
+	)
 }
 
 export default SplashScreen;

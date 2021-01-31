@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
-import { View, ActivityIndicator } from 'react-native';
-import SplashScreen from '../screens';
 import MainStackNavigator from './MainStackNavigator';
+import { SplashScreen } from '../screens';
+
 
 const Navigator = () => {
 	const [loading, setLoading] = useState(true);
 
 	if (loading) {
 		return (
-			<SplashScreen setLoading={setLoading} />
+			<SplashScreen setLoading={ setLoading } />
 		)
 	} else {
 		return (
 			<MainStackNavigator />
 		)
 	}
-
 }
+
+export default Navigator;

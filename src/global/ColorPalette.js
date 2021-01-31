@@ -3,5 +3,6 @@ export default ColorPalette = {
 	fg01: '#1BCB78',
 	fg02: '#35e894',
 	danger: '#FF6347',
-	accent: '#63DBFB'
+	warn: '#FFFF00',
+	accent: '#63DBFB',
 }
