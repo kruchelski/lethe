@@ -1,5 +1,5 @@
 import Info from './Info/Info';
-import Output from './output/Output';
-import Input from './input/Input';
+import Output from './Output/Output';
+import Input from './Input/Input';
 
 export { Info, Output, Input };

@@ -7,13 +7,13 @@ const styles = StyleSheet.create({
 		backgroundColor: 'transparent',
 		alignItems: 'flex-start',
 		justifyContent: 'flex-start',
-    // minHeight: 70,
     height: 'auto',
     padding: 5,
     paddingVertical: 10,
     borderWidth: 1,
     borderRadius: 5,
     borderColor: ColorPalette.fg01,
+    marginBottom: 10
   },
 	text: {
 		fontFamily: 'VT323_400Regular',
@@ -26,10 +26,11 @@ const styles = StyleSheet.create({
 		color: ColorPalette.fg01,
     fontSize: 22,
     textAlign: 'left',
+    textAlignVertical : 'top'
   },
   label: {
     position: 'absolute',
-    top: -12,
+    top: -10,
     left: 10,
     fontFamily: 'VT323_400Regular',
     backgroundColor: ColorPalette.bg01,

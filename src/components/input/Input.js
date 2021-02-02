@@ -4,28 +4,34 @@ import styles from './style';
 import { lethaiApi } from '../../services';
 import ColorPalette from '../../global/ColorPalette';
 
-const Input = ({ label, context }) => {
-  const [inputText, setInputText] = useState('');
+const Input = ({ label, placeholder, initialValue, multiline, warn, onSubmit }) => {
+  const [inputText, setInputText] = useState(initialValue);
+
+  const endEditingText = () => {
+    onSubmit(inputText)
+    setInputText('');
+  }
 
   return (
     <View
-      style={styles.container}
+      style={{ ...styles.container, ...(multiline ? {flex: 1} : {}), ...(warn ? {borderColor: ColorPalette.warn} : {}) }}
     >
       <Text
-        style={styles.label}
+        style={{ ...styles.label, ...(warn ? {color: ColorPalette.warn} : {}) }}
       >
         { label }
       </Text>
       <TextInput
-        placeholder={ 'Type your commands here' }
+        placeholder={ placeholder || 'Input text here' }
         placeholderTextColor={ ColorPalette.fg01Fade }
-        style={ styles.inputText}
+        multiline = { multiline }
+        style={{ ...styles.inputText, ...(multiline ? {flex: 1} : {}), ...(warn ? {color: ColorPalette.warn} : {}) }}
         value={ inputText }
         onChangeText={(text) => setInputText(text)}
-        onEndEditing={(event) => {}}
-        
-      >
-      </TextInput>
+        onEndEditing={(event) => { endEditingText(event.nativeEvent.text) }}
+        showSoftInputOnFocus={true}
+        autoCapitalize = 'none'
+      />
     </View>
   )
 }

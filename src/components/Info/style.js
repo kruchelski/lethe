@@ -9,6 +9,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'flex-start',
     minHeight: 70,
     height: 'auto',
+    marginBottom: 10,
     padding: 5,
     borderWidth: 1,
     borderRadius: 5,
@@ -22,7 +23,7 @@ const styles = StyleSheet.create({
   },
   label: {
     position: 'absolute',
-    top: -12,
+    top: -10,
     left: 10,
     fontFamily: 'VT323_400Regular',
     backgroundColor: ColorPalette.bg01,

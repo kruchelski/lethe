@@ -1,52 +1,67 @@
 import React from 'react';
-import { Text, FlatList, View } from 'react-native';
+import { Text, FlatList, View, ScrollView, ColorPropType } from 'react-native';
 import styles from './style';
+import ColorPalette from '../../global/ColorPalette';
 
-const Output = ({ navigation, label }) => {
-
-  // const notesMock = [
-  //   { id: 0, title: 'This is the note 1', content: 'This is a note taken to serve as a mock stuff.', date: '01/01/2021 15:00' },
-  //   { id: 1, title: 'This is the note 2', content: 'This is a note taken to serve as a mock stuff blablabla.', date: '01/01/2021 16:00' },
-  //   { id: 2, title: 'This is a note that have a loooong title and is expected to not wrap to the next line', content: 'This is a note taken to serve as a mock stuff kind of long text.', date: '02/01/2021 17:00' },
-  //   { id: 3, title: 'Blumba blumba', content: 'Blublublu', date: '02/01/2021 18:00' },
-  //   { id: 4, title: 'Miau', content: 'Miau miua miau.', date: '02/01/2021 19:00' },
-  // ]
-  const notesMock = []
+const Output = ({ navigation, label, type, content, itemId, itemName }) => {
 
   return (
     <View
-      style={ styles.container }
+      style={styles.container}
     >
       <Text
-        style={ styles.label }
+        style={styles.label}
       >
-        { label }
+        {label}
       </Text>
-      <FlatList
-        style={ styles.flatlistContainer }
-        data={ notesMock }
-        ListEmptyComponent={() => {
-          return (
-            <Text
-              style={ styles.warnText }
-            >
-              [No notes found]
-            </Text>
-          )
-        }}
-        keyExtractor={(_, index) => `list-item-${index}`}
-        renderItem={(data => {
-          return (
-            <Text
-              numberOfLines={1}
-              style={ styles.text }
-            >
-              { `> ${data.item.title}` }
-            </Text>
-          )
-        })}
-      >
-      </FlatList>
+      {
+        type === 'none' && <View>
+          </View>
+      }
+
+      {
+        type === 'list' && <FlatList
+          style={styles.innerContainer}
+          data={content}
+          ListEmptyComponent={() => {
+            if (1 !== 1) {
+              return (
+                <View></View>
+              )
+            } else {
+              return (
+
+                <Text
+                  style={styles.warnText}
+                >
+                  [No notes found]
+                </Text>
+
+              )
+            }
+          }}
+          keyExtractor={(_, index) => `list-item-${index}`}
+          renderItem={(data => {
+            return (
+              <Text
+                numberOfLines={1}
+                style={styles.text}
+              >
+                { `${data.item[itemId]}. ${data.item[itemName]}`}
+              </Text>
+            )
+          })}
+        />
+      }
+      {
+        type === 'text' && <ScrollView>
+          <Text
+            style={{ ...styles.text, ...(content ? {} : {color: ColorPalette.fg01Fade}) }}
+          >
+            {content || '[No content]'}
+          </Text>
+        </ScrollView>
+      }
     </View>
 
   )

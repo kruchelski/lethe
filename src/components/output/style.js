@@ -7,24 +7,22 @@ const styles = StyleSheet.create({
 		backgroundColor: 'transparent',
 		alignItems: 'stretch',
 		justifyContent: 'flex-start',
-    marginTop: 12,
-    marginBottom: 12,
     padding: 5,
     borderWidth: 1,
     borderRadius: 5,
     borderColor: ColorPalette.fg01,
-    flex: 1
+    flex: 1,
+    marginBottom: 10
   },
-  flatlistContainer: {
+  innerContainer: {
     flexDirection: 'column',
 		backgroundColor: 'transparent',
-
     flex: 1
   },
 	text: {
 		fontFamily: 'VT323_400Regular',
 		color: ColorPalette.fg01,
-    fontSize: 22,
+    fontSize: 20,
     textAlign: 'left',
   },
   warnText:{
@@ -35,7 +33,7 @@ const styles = StyleSheet.create({
   },
   label: {
     position: 'absolute',
-    top: -12,
+    top: -10,
     left: 10,
     fontFamily: 'VT323_400Regular',
     backgroundColor: ColorPalette.bg01,

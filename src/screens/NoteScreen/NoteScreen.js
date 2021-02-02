@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Text, KeyboardAvoidingView } from 'react-native';
 import styles from './style';
 import { Info, Output, Input } from '../../components';
+import ColorPalette  from '../../global/ColorPalette';
 
-const HomeScreen = ({ navigation }) => {
-  const [homeContent, setHomeContent] = useState({ type: 'blank', content: null })
+const NoteScreen = ({ navigation, route }) => {
 
   const notesMock = [
     { id: 0, title: 'This is the note 1', content: 'This is a note taken to serve as a mock stuff.', date: '01/01/2021 15:00' },
@@ -13,21 +13,30 @@ const HomeScreen = ({ navigation }) => {
     { id: 3, title: 'Blumba blumba', content: 'Blublublu', date: '02/01/2021 18:00' },
     { id: 4, title: 'Miau', content: 'Miau miua miau.', date: '02/01/2021 19:00' },
   ]
+
+  const [editing, setEditing] = useState(false);
+  const [note, setNote] = useState(() => {
+    return notesMock.find((note) => note.id === route.params.id)
+  })
   
+  const handleInputTitle = (title) => {
+    console.log('This is the title inside NoteScreen');
+    console.log(title);
+  }
+
+  const handleInputContent = (content) => {
+    console.log('THis is the content inside NoteScreen');
+    console.log(content);
+  }
+
   const handleCommands = (command) => {
-    console.log('This is the command');
+    console.log('This is the command inside NoteScreen');
     console.log(command);
-    if (command === 'note 2') {
-      navigation.navigate(
-        'NoteScreen',
-        {id: 2}
-      )
+    if (command.toLowerCase() === 'edit') {
+      setEditing(true);
     }
-    if (command === 'list') {
-      setHomeContent({
-        type: 'list',
-        content: notesMock
-      })
+    if (command.toLowerCase() === 'save') {
+      setEditing(false);
     }
   }
   
@@ -37,20 +46,39 @@ const HomeScreen = ({ navigation }) => {
       behavior={(Platform.OS === 'ios') ? "padding" : null} enabled
       keyboardVerticalOffset={Platform.select({ ios: 60, android: 60 })}
     >
+      {
+        !editing && <Info label={ 'INFO' } context={ 'note' } />
 
-      <Info label={ 'INFO' } context={ 'global' } />
-      <Output 
-        label={ 'OUTPUT' }
-        type={ homeContent.type || 'none' }
-        content={homeContent.content || '' }
-        itemId='id'
-        itemName='title'
-      />
+      }
+      <Text
+      numberOfLines={1}
+        style={{ ...styles.text, color: ColorPalette.fg02 }}
+      >
+        { note.title }
+      </Text>
+      {
+        !editing && <Output
+        label={ 'CONTENT' }
+        type='text'
+        content={ note.content }
+        />
+      }
+
+      {
+        editing && <Input
+          label={ 'CONTENT (EDITING)' }
+          placeholder={ `Type the note's content` }
+          initialValue=''
+          warn = { true }
+          multiline={ true }
+          onSubmit={ handleInputContent }
+        />
+      }
+
       <Input
         label={ 'COMMAND INPUT' }
         placeholder={ 'Type your commands here' }
         initialValue=''
-        warn={ false }
         multiline={ false }
         onSubmit={ handleCommands }
       />
@@ -59,4 +87,4 @@ const HomeScreen = ({ navigation }) => {
   )
 }
 
-export default HomeScreen;
+export default NoteScreen;

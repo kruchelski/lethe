@@ -1,6 +1,6 @@
 import React from 'react';
 import { createStackNavigator, HeaderTitle } from '@react-navigation/stack';
-import { HomeScreen } from '../screens';
+import { HomeScreen, NoteScreen } from '../screens';
 import ColorPalette from '../global/ColorPalette';
 
 const MainStack = createStackNavigator();
@@ -23,6 +23,11 @@ export default () => {
 				name={'HomeScreen'}
 				component={ HomeScreen }
 				options={{ title: 'Lethe' }}
+			/>
+			<MainStack.Screen
+				name={'NoteScreen'}
+				component={ NoteScreen }
+				options={{ title: 'Note details' }}
 			/>
 		</MainStack.Navigator>
 	)
