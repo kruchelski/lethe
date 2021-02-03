@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
 		backgroundColor: 'transparent',
 		alignItems: 'flex-start',
 		justifyContent: 'flex-start',
-    minHeight: 70,
+    minHeight: 60,
     height: 'auto',
     marginBottom: 10,
     padding: 5,
@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
 	text: {
 		fontFamily: 'VT323_400Regular',
 		color: ColorPalette.fg01,
-    fontSize: 22,
+    fontSize: 20,
     textAlign: 'justify'
   },
   label: {

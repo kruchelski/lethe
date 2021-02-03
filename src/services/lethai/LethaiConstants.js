@@ -36,7 +36,7 @@ export const GLOBAL_HELPER = {
   },
   indifferent: {
     0: `Type help for help.`,
-    1: `I also get confused. Type help to show commands.`,
+    1: `Sometimes I get confused too. Type help to show commands.`,
     2: `Well... Type help so you can find your way here.`
   },
   angry: {
@@ -53,13 +53,13 @@ export const NOTE_HELPER = {
     2: `Here you can interact with this awesome note! Type help if you're feeling lost.`
   },
   indifferent: {
-    0: `This is your note. Type help or   for help.`,
-    1: `It's not complicated. You can do stuff with your note. Type help or   to know more.`,
+    0: `This is your note. Type help for help.`,
+    1: `It's not complicated. You can do stuff with your note. Type help to know more.`,
     2: `Let's try do something with this note. Type help if you need some guidance.`
   },
   angry: {
-    0: `Please go away. Type help or   to know how.`,
-    1: `I hate this note. Please type help or the ? button to know how to do stuff like delete this sh**.`,
+    0: `Please go away. Type help to know how.`,
+    1: `I hate this note. Please type help to know how to do stuff like delete this sh**.`,
     2: `Let me help you burn this note and exit this app. Type help to get directions.`
   }
 }

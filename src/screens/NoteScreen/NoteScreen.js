@@ -1,45 +1,217 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Text, KeyboardAvoidingView } from 'react-native';
-import styles from './style';
 import { Info, Output, Input } from '../../components';
-import ColorPalette  from '../../global/ColorPalette';
+import { NotesContext } from '../../contexts/NotesContext';
+import { lethaiApi } from '../../services';
+import ColorPalette from '../../global/ColorPalette';
+import styles from './style';
+import commands from '../../global/Commands';
 
 const NoteScreen = ({ navigation, route }) => {
 
-  const notesMock = [
-    { id: 0, title: 'This is the note 1', content: 'This is a note taken to serve as a mock stuff.', date: '01/01/2021 15:00' },
-    { id: 1, title: 'This is the note 2', content: 'This is a note taken to serve as a mock stuff blablabla.', date: '01/01/2021 16:00' },
-    { id: 2, title: 'This is a note that have a loooong title and is expected to not wrap to the next line', content: 'This is a note taken to serve as a mock stuff kind of long text.', date: '02/01/2021 17:00' },
-    { id: 3, title: 'Blumba blumba', content: 'Blublublu', date: '02/01/2021 18:00' },
-    { id: 4, title: 'Miau', content: 'Miau miua miau.', date: '02/01/2021 19:00' },
-  ]
+  const stateAux = {
+    ok: 'ok',
+    error: 'error',
+    deleted: 'warning',
+    success: 'ok'
+  }
 
-  const [editing, setEditing] = useState(false);
+  const notesContext = useContext(NotesContext);
+
+  const [editing, setEditing] = useState(route.params.new);
+  const [info, setInfo] = useState('');
+  const [pageState, setPageState] = useState('ok');
   const [note, setNote] = useState(() => {
-    return notesMock.find((note) => note.id === route.params.id)
+    if (!route.params.new) {
+      return notesContext.state.notes.find((note) => note.id === route.params.id)
+    } else {
+      return { id: null, title: route.params.title, content: route.params.content }
+    }
   })
-  
-  const handleInputTitle = (title) => {
-    console.log('This is the title inside NoteScreen');
-    console.log(title);
+  const [noteBkp, setNoteBkp] = useState(() => {
+    const noteTemp = Object.assign({}, note);
+    return noteTemp;
+  })
+  const [noteContent, setNoteContent] = useState({ type: 'text', content: note.content })
+
+  useEffect(() => {
+    switch (pageState) {
+      case 'ok':
+        setInfo(lethaiApi.getNoteHelper());
+        if (!editing) {
+          setNoteContent({ type: 'text', content: note.content })
+        }
+        break;
+      case 'error':
+        setInfo(lethaiApi.getInputError());
+        break;
+      case 'deleted':
+        setInfo(lethaiApi.getNoteDeleted());
+        break;
+      case 'success':
+        setInfo(lethaiApi.getNoteSuccess());
+        break;
+      default:
+        setPageState('ok');
+    }
+    if (pageState === 'deleted') {
+      const msg = note.id !== null && note.id !== undefined ?
+        'Note deleted. Going back to Home Screen' :
+        'Note canceled. Going back to Home Screen';
+      setNoteContent({ type: 'text', content: msg })
+      setTimeout(() => {
+        setPageState('ok');
+        navigation.goBack();
+      }, 5000)
+    }
+    if (pageState === 'success') {
+      setTimeout(() => {
+        setPageState('ok');
+      }, 5000)
+    }
+    if (pageState !== 'ok' && pageState !== 'deleted') {
+      setTimeout(() => {
+        setPageState('ok')
+      }, 7000)
+    }
+  }, [pageState])
+
+  const handleCommands = (command) => {
+    if (!command) {
+      return;
+    }
+    command = command.trim();
+    const commandChunks = command.split(' ');
+    commandChunks[0] = commandChunks[0].toLowerCase();
+    
+    let error = '';
+    
+    switch (commandChunks[0]) {
+      case 'edit':
+        if (commandChunks.length > 1) {
+          error = "This command doesn't accept arguments."
+        } else {
+          setEditing(true);
+          setPageState('ok');
+        }
+        break;
+
+      case 'show':
+        if (commandChunks.length > 1) {
+          error = "This command doesn't accept arguments."
+        } else {
+          setEditing(false);
+          setNoteContent({ type: 'text', content: note.content });
+          setPageState('ok');
+        }
+        break;
+
+      case 'clear':
+        
+        if (commandChunks.length > 1) {
+          error = "This command doesn't accept arguments."
+        } else {
+          if (!editing) {
+            break;
+          }
+          setNote((prev) => {
+            return { ...prev, content: '' };
+          })
+          setEditing(true);
+        }
+        break;
+
+      case 'title':
+        let titleTemp = '';
+        if (commandChunks.length === 1) {
+          titleTemp = noteBkp.title;
+        } else {
+          let chunksTemp = [];
+          commandChunks.forEach((c, i) => {
+            if (i !== 0) {
+              chunksTemp.push(c);
+            }
+          })
+
+          titleTemp = chunksTemp.join(' ');
+        }
+        setNote((prev) => {
+          return { ...prev, title: titleTemp }
+        })
+        setPageState('ok');
+        break;
+
+      case 'reset':
+        if (commandChunks.length > 1) {
+          error = "This command doesn't accept arguments."
+        } else {
+          const noteTemp = Object.assign({}, noteBkp);
+          setEditing(false);
+          setNote(noteTemp);
+          setNoteContent({ type: 'text', content: note.content })
+          setPageState('ok');
+        }
+        break;
+
+      case 'save':
+        if (commandChunks.length > 1) {
+          error = "This command doesn't accept arguments."
+        } else {
+          setEditing(false);
+          const noteTempSave = Object.assign({}, note);
+          setNoteBkp(noteTempSave);
+          if (note.id !== null && note.id !== undefined) {
+            notesContext.replaceNote(note);
+          } else {
+            notesContext.addNote(note);
+          }
+          setNoteContent({ type: 'text', content: note.content })
+          setPageState('success');
+          
+        }
+        break;
+
+      case 'rm':
+        if (commandChunks.length > 1) {
+          error = "This command doesn't accept arguments."
+          break;
+        } else {
+          if (note.id === null || note.id === undefined) {
+            setEditing(false);
+          } else {
+            setEditing(false);
+            notesContext.deleteNote(note.id);
+          }
+          setPageState('deleted');
+        }
+        break;
+
+      case 'help':
+        let helpText = '';
+        commands.note.forEach(command => {
+          helpText += `$ ${command.comm}\n${command.desc} \n  \n`;
+        })
+        setEditing(false);
+        setNoteContent({ type: 'text', content: helpText });
+        setPageState('ok');
+        break;
+
+      default:
+        error = 'Invalid command.';
+    }
+    if (error) {
+      setEditing(false)
+      setNoteContent({ type: 'text', content: error });
+      setPageState('error');
+    }
   }
 
   const handleInputContent = (content) => {
-    console.log('THis is the content inside NoteScreen');
-    console.log(content);
+    setNote((prev) => {
+      return { ...prev, content }
+    })
   }
 
-  const handleCommands = (command) => {
-    console.log('This is the command inside NoteScreen');
-    console.log(command);
-    if (command.toLowerCase() === 'edit') {
-      setEditing(true);
-    }
-    if (command.toLowerCase() === 'save') {
-      setEditing(false);
-    }
-  }
-  
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -47,40 +219,48 @@ const NoteScreen = ({ navigation, route }) => {
       keyboardVerticalOffset={Platform.select({ ios: 60, android: 60 })}
     >
       {
-        !editing && <Info label={ 'INFO' } context={ 'note' } />
-
+        !editing && <Info
+          key={info}
+          label={'INFO'}
+          inputState={stateAux[pageState] || 'ok'}
+          content={info}
+        />
       }
+      
       <Text
-      numberOfLines={1}
+        numberOfLines={1}
         style={{ ...styles.text, color: ColorPalette.fg02 }}
       >
-        { note.title }
+        {note.title}
       </Text>
       {
         !editing && <Output
-        label={ 'CONTENT' }
-        type='text'
-        content={ note.content }
+          key={noteContent}
+          label={'CONTENT'}
+          type={noteContent.type || 'text'}
+          content={noteContent.content || ''}
+          itemId='id'
+          itemName='title'
         />
       }
 
       {
         editing && <Input
-          label={ 'CONTENT (EDITING)' }
-          placeholder={ `Type the note's content` }
-          initialValue=''
-          warn = { true }
-          multiline={ true }
-          onSubmit={ handleInputContent }
+          label={'CONTENT (EDITING)'}
+          placeholder={`Type the note's content`}
+          initialValue={note.content}
+          warn={true}
+          multiline={true}
+          onInput={handleInputContent}
         />
       }
 
       <Input
-        label={ 'COMMAND INPUT' }
-        placeholder={ 'Type your commands here' }
+        label={'COMMAND INPUT'}
+        placeholder={'Type your commands here'}
         initialValue=''
-        multiline={ false }
-        onSubmit={ handleCommands }
+        multiline={false}
+        onSubmit={handleCommands}
       />
 
     </KeyboardAvoidingView>

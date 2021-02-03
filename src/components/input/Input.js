@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { Text, View, TextInput } from 'react-native';
 import styles from './style';
-import { lethaiApi } from '../../services';
 import ColorPalette from '../../global/ColorPalette';
 
-const Input = ({ label, placeholder, initialValue, multiline, warn, onSubmit }) => {
+const Input = ({ label, placeholder, initialValue, multiline, warn, onSubmit, onInput }) => {
   const [inputText, setInputText] = useState(initialValue);
 
   const endEditingText = () => {
+    if (!onSubmit) {
+      return;
+    }
     onSubmit(inputText)
     setInputText('');
   }
@@ -27,10 +29,16 @@ const Input = ({ label, placeholder, initialValue, multiline, warn, onSubmit }) 
         multiline = { multiline }
         style={{ ...styles.inputText, ...(multiline ? {flex: 1} : {}), ...(warn ? {color: ColorPalette.warn} : {}) }}
         value={ inputText }
-        onChangeText={(text) => setInputText(text)}
+        onChangeText={(text) => {
+          setInputText(text)
+          if (onInput) {
+            onInput(text)
+          } 
+        }}
         onEndEditing={(event) => { endEditingText(event.nativeEvent.text) }}
-        showSoftInputOnFocus={true}
+        // showSoftInputOnFocus={true}
         autoCapitalize = 'none'
+        autoCorrect = { false }
       />
     </View>
   )

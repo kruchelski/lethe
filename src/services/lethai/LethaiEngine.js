@@ -28,8 +28,6 @@ function _getMood() {
 }
 
 function _getGreeting(mood) {
-  console.log('mood');
-  console.log(mood);
   let greetingsLength = Object.keys(lethaiConstants.GREETINGS[mood]).length;
   greetingsLength -= 0.1;
   let greetingIndex = Math.floor(Math.random() * greetingsLength);

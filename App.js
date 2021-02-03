@@ -17,7 +17,6 @@ export default function App() {
 			</View>
 		)
 	} else {
-		console.log(new Date())
 		return (
 			<NavigationContainer>
 				<Navigator />

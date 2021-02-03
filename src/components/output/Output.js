@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, FlatList, View, ScrollView, ColorPropType } from 'react-native';
+import { Text, FlatList, View, ScrollView } from 'react-native';
 import styles from './style';
 import ColorPalette from '../../global/ColorPalette';
 
