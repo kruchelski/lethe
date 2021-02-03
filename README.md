@@ -69,7 +69,7 @@ Fig 7 - Deleting all notes
 Is just a React Native App build with Expo framework that uses React Navigation
 #### General
 - [NPM](https://www.npmjs.com/)
-- [React]https://pt-br.reactjs.org/)
+- [React](https://pt-br.reactjs.org/)
 - [React-Native](https://reactnative.dev/)
 - [React-Navigation](https://reactnavigation.org/)
 - [Expo](https://expo.io/)
